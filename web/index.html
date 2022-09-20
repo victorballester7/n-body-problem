@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>n-body problem</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+  <h1>Welcome to the n-body problem simulator!</h1>
+
+  <button class="button" onclick="random()" type="button">Random system</button>
+  <button class="button" onclick="random()" type="button">Predefined system</button>
+  <button class="button" onclick="random()" type="button">Custom system</button>
+
+  <hr class="line">
+  <form action="/action_page.php">
+    <div>
+      <label for="numbodies">Number of bodies</label>
+      <input type="range" id="numbodies" min="2" max="100" step="1" value="10">
+    </div>
+    <br>
+    <div>
+      <label id="com">Plot center of masses</label>
+      <label class="switch">
+        <input id="com" type="checkbox" checked>
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <br>
+    <div>
+      <label id="com">Plot traces</label>
+      <label class="switch">
+        <input id="com" type="checkbox">
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <br>
+    <div>
+      <input class="submit" type="submit" width="99%" value="Plot">
+    </div>
+  </form>
+
+  <!-- <label for="numbodies"> 
+    <input >
+  </label> -->
+  <div class="range">
+    <div class="sliderValue">
+      <span>10</span>
+    </div>
+    <div class="field">
+      <div class="value left">2</div>
+      <input type="range" min="2" max="100" value="10" steps="1">
+      <div class="value right">100</div>
+    </div>
+  </div>
+  <script src="main.js"></script>
+</body>
+
+</html>
