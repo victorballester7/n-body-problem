@@ -9,13 +9,6 @@ double dist(double u[], double v[], int dim) {
   return sqrt(d);
 }
 
-// double* zero_vect(int dim) {
-//   double* v = (double*)malloc(sizeof(double) * dim);
-//   for (int i = 0; i < dim; i++)
-//     v[i] = 0;
-//   return v;
-// }
-
 double* n_body_eq(int dim, int n, double r_state[n * 2 * dim], double mass[n], double EPS) {
   int ncol = 2 * dim;
   double* X_dot = (double*)malloc(sizeof(double) * n * ncol);
@@ -32,15 +25,9 @@ double* n_body_eq(int dim, int n, double r_state[n * 2 * dim], double mass[n], d
         else {
           for (int r = 0; r < dim; r++)  // assignation of the position vector of the body k
             xk[r] = r_state[k * ncol + 2 * r];
-          // if (i == 0 && p == 0) {
-          //   printf("%i, %i, %i----%lf\n", i, j, k, -mass[k] * (xi[j] - xk[j]) / (pow(dist(xi, xk, dim), 3) + EPS));
-          //   // printf("  mass = %lf\n  pos = %lf\n  denom = %lf\n", mass[k], xi[j] - xk[j], pow(dist(xi, xk, dim), 3) + EPS);
-          // }
           X_dot[i * ncol + 2 * j + 1] += -mass[k] * (xi[j] - xk[j]) / (pow(dist(xi, xk, dim), 3) + EPS);
         }
       }
-      // if (i == 0 && p == 0)
-      //   printf("%lf\n\n", X_dot[i * ncol + 2 * j + 1]);
     }
   }
   return X_dot;
@@ -54,9 +41,6 @@ void write_vector(int dim, double v[]) {
 
 double* rk4(int num_steps, int dim, int n, double r_state[n * 2 * dim], double mass[n], double dt, double EPS) {
   int len = n * 2 * dim;
-  // printf("dim = %i \n n = %i \n len = %i\n dt = %lf\n", dim, n, len, dt);
-  // write_vector(n, mass);
-  // write_vector(n * 2 * dim, r_state);
   double* r = (double*)malloc(sizeof(double) * (num_steps + 1) * len);
   double ri1[len], ri2[len], ri3[len], ri4[len];
   for (int i = 0; i < len; i++)  // assignation of the initial state
