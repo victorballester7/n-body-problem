@@ -1,0 +1,11 @@
+{
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "python.formatting.provider": "none",
+  "files.associations": {
+    "*.rmd": "markdown",
+    "n-body_field.h": "c",
+    "misc.h": "c"
+  }
+}
