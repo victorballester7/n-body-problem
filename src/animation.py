@@ -1,16 +1,13 @@
 # 2d N-body problem
 from save_plot import save_plot
 from bodies import body_system
+from parameters import *
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import sys
 import numpy as np
 import matplotlib
-matplotlib.use('TkAgg')  # Use the 'agg' backend
-
-
-# t0 = 91.87  # years. t0 = sqrt((1au)^3/(G*M_earth))
-t0 = 33554.6043376  # days
+matplotlib.use('TkAgg')  # Use the 'TkAgg' backend
 
 
 def anim2d(system: body_system, step_size: float,
@@ -60,7 +57,7 @@ def anim2d(system: body_system, step_size: float,
     y_data = system.r[: (frame + 1), :, 1]
     com_data = system.com[:(frame + 1)]
 
-    time_text.set_text(time_template % (frame * step_size * t0))
+    time_text.set_text(time_template % (frame * step_size * t0 / speed_up))
 
     for j in range(system.n_bodies):
       planets[j].set_data(x_data[frame, j], y_data[frame, j])
@@ -144,7 +141,7 @@ def anim3d(system: body_system, step_size: float,
     com_data = system.com[:(frame + 1)]
 
     ax.view_init(elev=30, azim=-60 + frame / 10)
-    time_text.set_text(time_template % (frame * step_size * t0))
+    time_text.set_text(time_template % (frame * step_size * t0 / speed_up))
     for j in range(system.n_bodies):
       planets[j].set_data(x_data[frame, j], y_data[frame, j])
       planets[j].set_3d_properties(z_data[frame, j])

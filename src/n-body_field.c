@@ -11,7 +11,7 @@
 double *integration(int numSteps, double x[], double m[], double h, double hmin, double hmax, double tol, int maxNumStepsFlow, int n_bodies, int dim, double G, double EPS) {
   double *result = malloc(sizeof(double) * numSteps * dim * n_bodies);
   double t = 0;
-  double T = numSteps * h;
+  double T = h;
   int n = 2 * n_bodies * dim;
   n_body_params param = {dim, malloc(sizeof(double) * n_bodies), G, EPS};
   memcpy(param.m, m, sizeof(double) * n_bodies);  // masses
