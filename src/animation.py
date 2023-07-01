@@ -16,6 +16,8 @@ def anim2d(system: body_system, step_size: float,
 
   time_template = 'time = %.2f days'
   lim = 3
+  if "solar_system" in system.sys_name and system.n_bodies == 9:
+    lim = 35
   ax = fig.add_subplot()
   ax.axis('equal')
   ax.set(xlim=(-lim, lim), ylim=(-lim, lim))
@@ -57,7 +59,7 @@ def anim2d(system: body_system, step_size: float,
     y_data = system.r[: (frame + 1), :, 1]
     com_data = system.com[:(frame + 1)]
 
-    time_text.set_text(time_template % (frame * step_size * t0 / speed_up))
+    time_text.set_text(time_template % (frame * step_size * t0))
 
     for j in range(system.n_bodies):
       planets[j].set_data(x_data[frame, j], y_data[frame, j])
@@ -81,6 +83,8 @@ def anim3d(system: body_system, step_size: float,
 
   time_template = 'time = %.2f days'
   lim = 2
+  if "solar_system" in system.sys_name and system.n_bodies == 9:
+    lim = 35
   ax = fig.add_subplot(projection='3d')
   ax.set(xlim=(-lim, lim), ylim=(-lim, lim), zlim=(-lim, lim))
   # changes the size of the ticks
@@ -141,7 +145,7 @@ def anim3d(system: body_system, step_size: float,
     com_data = system.com[:(frame + 1)]
 
     ax.view_init(elev=30, azim=-60 + frame / 10)
-    time_text.set_text(time_template % (frame * step_size * t0 / speed_up))
+    time_text.set_text(time_template % (frame * step_size * t0))
     for j in range(system.n_bodies):
       planets[j].set_data(x_data[frame, j], y_data[frame, j])
       planets[j].set_3d_properties(z_data[frame, j])

@@ -32,6 +32,8 @@ class body_system:  # particle class
                       9.14,  # saturn
                       3.981,  # uranus
                       3.865])  # neptune
+      if self.n_bodies == 9:
+        vol[0] = 0.3829
       self.vol = a * vol + b
     else:
       if self.dim == 2:
