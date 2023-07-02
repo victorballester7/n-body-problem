@@ -18,6 +18,9 @@ def get_dim() -> int:
     except ValueError:
       print("The dimension is not correct.\nExiting.")
       sys.exit(0)
+  if dim not in [2, 3]:
+    print("The dimension is not correct.\nExiting.")
+    sys.exit(0)
   return dim
 
 

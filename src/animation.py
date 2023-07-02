@@ -97,7 +97,7 @@ def anim3d(system: body_system, step_size: float,
   time_template = 'time = %.2f years'
   lim = 2
   if "solar_system" in system.name and system.n_bodies >= 9:
-    lim = 50
+    lim = 35
   ax = fig.add_subplot(projection='3d')
   # ax.set(xlim=(-lim, lim), ylim=(-lim, lim), zlim=(-lim, lim))
   ax.axis('equal')
@@ -240,5 +240,5 @@ def get_anim(system: body_system, step_size: float,
     anim = anim3d(system, step_size, trace, com, FRAMES, interval, speed_up)
 
   plt.show()
-  FPS = 60
+  FPS = 25
   save_plot(system, anim, FPS, interval, filename)
