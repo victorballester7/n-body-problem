@@ -41,37 +41,6 @@ We present here some animations of the project in 2D and 3D.
 
 #### 2D
 
-https://raw.githubusercontent.com/victorballester7/n-body_problem/main/.github/images/random10-2d.mp4
+https://github.com/victorballester7/n-body_problem/assets/78110444/745ef526-eb77-405e-b908-8a81b25eb28c
 
-<div style="display: flex;" align="center">
-  <div style="flex: 45%; padding: 5px;">
-    <img src="../animation/random10-2d.gif" alt="Image 1">
-    <p>Random system of 10 bodies in 2D</p>
-  </div>
-  <!-- <div style="flex: 45%; padding: 5px;">
-    <video width="100%" controls>
-      <source src="../animation/solar_system2d.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <p>Solar system</p>
-  </div> -->
-</div>
-
-#### 3D
-
-<!-- <div style="display: flex;" align="center">
-  <div style="flex: 45%; padding: 5px;">
-    <video width="100%" controls>
-      <source src="video_filename.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <p>Random system of 20 bodies in 3D</p>
-  </div>
-  <div style="flex: 45%; padding: 5px;">
-    <video width="100%" controls>
-      <source src="video_filename_2.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <p>Rocky planets of the Solar System</p>
-  </div>
-</div> -->
+https://github.com/victorballester7/n-body_problem/assets/78110444/5183d3f7-9b14-4e36-a0ce-0171edf0ee03
