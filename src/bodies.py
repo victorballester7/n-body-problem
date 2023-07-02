@@ -6,21 +6,20 @@ c_double_p = ctypes.POINTER(ctypes.c_double)
 
 class body_system:  # particle class
 
-  colors: np.ndarray
-
-  def __init__(self: 'body_system', sys_name: str, dim: int, n_bodies: int,
+  def __init__(self: 'body_system', name: str, dim: int, n_bodies: int,
                bodies_names: np.ndarray, mass: np.ndarray, r0: np.ndarray) -> None:
-    self.sys_name = sys_name
+    self.name = name
     self.dim = dim
     self.n_bodies = n_bodies  # number of planets
     self.bodies_names = bodies_names
     self.mass = mass
     self.r0 = r0
     self.volume()
+    self.color()
     # self.change_of_rf()
 
   def volume(self) -> None:
-    if "solar_system" in self.sys_name:
+    if "solar_system" in self.name:
       a = 0.5
       b = 3
       vol = np.array([109.2,  # sun
@@ -45,7 +44,33 @@ class body_system:  # particle class
         b = 0
         self.vol = a * np.cbrt(self.mass) + b
 
+  def color(self) -> None:
+    if "solar_system" in self.name:
+      self.colors = np.zeros((self.n_bodies, 3))
+      for i, planet in enumerate(self.bodies_names):
+        if planet == "sun":
+          self.colors[i] = np.array([1, 1, 0])
+        elif planet == "mercury":
+          self.colors[i] = np.array([0.5, 0.5, 0.5])
+        elif planet == "venus":
+          self.colors[i] = np.array([0.5, 0.5, 0])
+        elif planet == "earth":
+          self.colors[i] = np.array([0, 0, 1])
+        elif planet == "mars":
+          self.colors[i] = np.array([1, 0, 0])
+        elif planet == "jupiter":
+          self.colors[i] = np.array([1, 0.5, 0])
+        elif planet == "saturn":
+          self.colors[i] = np.array([0.5, 0.5, 0])
+        elif planet == "uranus":
+          self.colors[i] = np.array([0, 0.5, 0.5])
+        elif planet == "neptune":
+          self.colors[i] = np.array([0, 0, 0.5])
+    else:
+      self.colors = np.random.uniform(0.25, 1, size=(self.n_bodies, 3))
+
   # integration of the system
+
   def integrate_system(self: 'body_system', lib_filename: str,
                        num_steps: int, step_size: float, num_steps_max_flow: int,
                        TOL_rk78: float, EPS_field: float) -> None:
@@ -79,11 +104,6 @@ class body_system:  # particle class
     self.com = np.zeros((num_steps + 1, self.dim))
 
     # conversion from np.array to ctype data
-    # print(self.r0)
-    # print(self.r0.flatten())
-    # aux_r0 = np.ctypeslib.as_ctypes(self.r0.flatten())
-    # aux_mass = np.ctypeslib.as_ctypes(self.mass)
-
     aux_r0 = self.r0.flatten().astype(np.float64)
     aux_r0 = aux_r0.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
     aux_mass = self.mass.astype(np.float64)
