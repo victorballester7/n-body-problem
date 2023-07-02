@@ -69,7 +69,7 @@ def save_plot(system: body_system, anim: animation.FuncAnimation,
   #   # create the .mp4 file
   if c == 'a' or c == 'b':
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    filename_out = script_dir + "/../animation/" + name + ".mp4"
+    filename_out = script_dir + "/../animation/" + name + ".gif"
     writervideo = animation.FFMpegWriter(
         fps=FPS, metadata={
             'artist': "Víctor Ballester"}, bitrate=-1)

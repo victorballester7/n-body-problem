@@ -43,10 +43,7 @@ We present here some animations of the project in 2D and 3D.
 
 <div style="display: flex;" align="center">
   <div style="flex: 45%; padding: 5px;">
-    <video width="100%" controls>
-      <source src="../animation/solar_system2d.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
+    <img src="../animation/random10-2d.gif" alt="Image 1">
     <p>Random system of 10 bodies in 2D</p>
   </div>
   <div style="flex: 45%; padding: 5px;">
