@@ -2,10 +2,11 @@
 #define N_BODY_FIELD_H
 
 typedef struct n_body_params {
-  int dim;     // dimension of the space (2 or 3)
-  double *m;   // masses
-  double G;    // gravitational constant
-  double EPS;  // softening parameter
+  int dim;          // dimension of the space (2 or 3)
+  double *m;        // masses
+  double G;         // gravitational constant
+  double TOL_COLL;  // tolerance for the collision detection
+  double EPS;       // softening parameter
 } n_body_params;
 
 // -----------------------------------------------------
@@ -22,6 +23,7 @@ typedef struct n_body_params {
 // 	hmin: minimum step size
 // 	hmax: maximum step size
 // 	tol: tolerance for the RK78 method
+// 	tol_coll: tolerance for the collision detection
 // 	maxNumStepsFlow: maximum number of steps for the RK78 method
 // 	n_bodies: number of bodies
 // 	dim: dimension of the space (2 or 3)
@@ -31,7 +33,7 @@ typedef struct n_body_params {
 // Returns:
 // 	pointer to the array of the flow at times 0, h, 2h, ..., (numSteps - 1)h
 // -----------------------------------------------------
-double *integration(int numSteps, double x[], double m[], double h, double hmin, double hmax, double tol, int maxNumStepsFlow, int n_bodies, int dim, double G, double EPS);
+double *integration(int numSteps, double x[], double m[], double h, double hmin, double hmax, double tol, double tol_coll, int maxNumStepsFlow, int n_bodies, int dim, double G, double EPS);
 
 // -----------------------------------------------------
 // n-body field

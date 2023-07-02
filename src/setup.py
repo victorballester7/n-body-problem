@@ -5,36 +5,47 @@ import sys
 
 
 def get_dim() -> int:
-  print("Dimension (2 or 3):")
+  print("Dimension of the system (2 or 3, default: 2):")
   try:
-    dim = int(input())
-  except (ValueError, KeyboardInterrupt):
-    print("The dimension is not correct.\nExiting.")
+    dim = input()
+  except KeyboardInterrupt:
     sys.exit(0)
-  if dim not in [2, 3]:
-    print("The dimension is not correct.\nExiting.")
-    sys.exit(0)
+  if dim == '':
+    dim = 2
+  else:
+    try:
+      dim = int(dim)
+    except ValueError:
+      print("The dimension is not correct.\nExiting.")
+      sys.exit(0)
   return dim
 
 
 def get_bodies(filename: str) -> body_system:
-  print("Random ('r') or predefined systems ('s') for the initial states of the bodies:")
+  print("Random or Predefined systems for the initial states of the bodies: (r/p, default: r)")
   try:
     p = input()
-  except (ValueError, KeyboardInterrupt):
+  except KeyboardInterrupt:
+    sys.exit(0)
+  if p not in ['r', 'p', '']:
     print("The data entered is not correct.\nExiting.")
     sys.exit(0)
-  if p not in ['r', 's']:
-    print("The data entered is not correct.\nExiting.")
-    sys.exit(0)
+
   dim = get_dim()
-  if p == 'r':
-    print("Number of bodies:")
+  if p == 'r' or p == '':
+    print("Number of bodies: (default: 5)")
     try:
-      n = int(input())
-    except (ValueError, KeyboardInterrupt):
-      print("The number of bodies does not make sense.\nExiting.")
+      n = input()
+    except KeyboardInterrupt:
       sys.exit(0)
+    if n == '':
+      n = 5
+    else:
+      try:
+        n = int(n)
+      except ValueError:
+        print("The number of bodies is not correct.\nExiting.")
+        sys.exit(0)
     if n <= 1:
       print("The number of bodies does not make sense.\nExiting.")
       sys.exit(0)
@@ -59,14 +70,21 @@ def get_bodies(filename: str) -> body_system:
     syst_names = syst_names.sort_values()
     num_sys = len(syst_names)
 
-    print("Which system do you want to see?")
+    print("Which system do you want to see? (default: 0)")
     for i, system in enumerate(syst_names):
       print(str(i) + ") " + system)
     try:
-      k = int(input())
-    except (ValueError, KeyboardInterrupt):
-      print("The data entered is not correct.\nExiting.")
+      k = input()
+    except KeyboardInterrupt:
       sys.exit(0)
+    if k == '':
+      k = 0
+    else:
+      try:
+        k = int(k)
+      except ValueError:
+        print("The data entered is not correct.\nExiting.")
+        sys.exit(0)
     if k not in range(num_sys):
       print("The data entered is not correct.\nExiting.")
       sys.exit(0)

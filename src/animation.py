@@ -11,33 +11,34 @@ matplotlib.use('TkAgg')  # Use the 'TkAgg' backend
 
 
 def anim2d(system: body_system, step_size: float,
-           trace_bool: bool, com_bool: bool, FRAMES: int, interval: float) -> animation.FuncAnimation:
+           trace_bool: bool, com_bool: bool, FRAMES: int, interval: float, speed_up: int) -> animation.FuncAnimation:
   fig = plt.figure(figsize=(15, 10))
 
-  time_template = 'time = %.2f days'
+  time_template = 'time = %.2f years'
   lim = 3
   if "solar_system" in system.name and system.n_bodies >= 9:
-    lim = 40
+    lim = 50
   ax = fig.add_subplot()
+  ax.set_xlim(-lim, lim)
+  ax.set_ylim(-lim, lim)
   ax.axis('equal')
-  ax.set(xlim=(-lim, lim), ylim=(-lim, lim))
   # changes the size of the ticks
   ax.tick_params(axis='both', which='major', labelsize=10)
 
-  ax.set_xlabel('x (AU)', fontsize=14)
-  ax.set_ylabel('y (AU)', fontsize=14)
+  ax.set_xlabel('x (AU)', fontsize=SIZE_small)
+  ax.set_ylabel('y (AU)', fontsize=SIZE_small)
 
   if "solar_system" in system.name:
     ax.set_title(
         "Solar system",
-        fontsize=16,
+        fontsize=SIZE_title,
         fontweight='bold')
   else:
     ax.set_title(
         str(
             system.n_bodies) +
         "-body system",
-        fontsize=16,
+        fontsize=SIZE_title,
         fontweight='bold')
 
   planets = [
@@ -46,7 +47,12 @@ def anim2d(system: body_system, step_size: float,
       ax.plot([], [], '-', lw=0.5, color=system.colors[i])[0] for i in range(system.n_bodies)]
   if com_bool:
     com = ax.plot([], [], 'x', label="Center of masses", color='red')[0]
-  time_text = ax.text(0.05, 0.95, '', transform=ax.transAxes)
+  time_text = ax.text(
+      0.05,
+      0.95,
+      '',
+      transform=ax.transAxes,
+      fontsize=SIZE_big)
   # lw = linewidth
   # ms = markersize
   ax.legend(
@@ -55,20 +61,21 @@ def anim2d(system: body_system, step_size: float,
           1,
           0.5),
       ncol=1,
-      fontsize=14)
+      fontsize=SIZE_small)
 
   # fig.subplots_adjust(right=0.75)
   fig.tight_layout()
 
   def animate(frame):
-    x_data = system.r[: (frame + 1), :, 0]
-    y_data = system.r[: (frame + 1), :, 1]
-    com_data = system.com[:(frame + 1)]
+    real_frame = frame * speed_up
+    x_data = system.r[: (real_frame + 1), :, 0]
+    y_data = system.r[: (real_frame + 1), :, 1]
+    com_data = system.com[:(real_frame + 1)]
 
-    time_text.set_text(time_template % (frame * step_size * t0))
+    time_text.set_text(time_template % (real_frame * step_size * t0_years))
 
     for j in range(system.n_bodies):
-      planets[j].set_data(x_data[frame, j], y_data[frame, j])
+      planets[j].set_data(x_data[real_frame, j], y_data[real_frame, j])
       if trace_bool:
         traces[j].set_data(x_data[:, j], y_data[:, j])
     if com_bool:
@@ -78,26 +85,30 @@ def anim2d(system: body_system, step_size: float,
     return planets + traces + [time_text]
 
   anim = animation.FuncAnimation(
-      fig, animate, frames=FRAMES, interval=interval, blit=True)
+      fig, animate, frames=FRAMES // speed_up, interval=interval, blit=True)
 
   return anim
 
 
 def anim3d(system: body_system, step_size: float,
-           trace_bool: bool, com_bool: bool, FRAMES: int, interval: float) -> animation.FuncAnimation:
+           trace_bool: bool, com_bool: bool, FRAMES: int, interval: float, speed_up: int) -> animation.FuncAnimation:
   fig = plt.figure(figsize=(15, 10))
 
-  time_template = 'time = %.2f days'
+  time_template = 'time = %.2f years'
   lim = 2
   if "solar_system" in system.name and system.n_bodies >= 9:
-    lim = 40
+    lim = 50
   ax = fig.add_subplot(projection='3d')
-  ax.set(xlim=(-lim, lim), ylim=(-lim, lim), zlim=(-lim, lim))
+  # ax.set(xlim=(-lim, lim), ylim=(-lim, lim), zlim=(-lim, lim))
+  ax.axis('equal')
+  ax.set_xlim(-lim, lim)
+  ax.set_ylim(-lim, lim)
+  ax.set_zlim(-lim, lim)
   # changes the size of the ticks
   ax.tick_params(axis='both', which='major', labelsize=10)
-  ax.set_xlabel('x', fontsize=14)
-  ax.set_ylabel('y', fontsize=14)
-  ax.set_zlabel('z', fontsize=14)
+  ax.set_xlabel('x', fontsize=SIZE_small)
+  ax.set_ylabel('y', fontsize=SIZE_small)
+  ax.set_zlabel('z', fontsize=SIZE_small)
 
   # Remove the grid
   ax.grid(False)
@@ -112,14 +123,14 @@ def anim3d(system: body_system, step_size: float,
   if "solar_system" in system.name:
     ax.set_title(
         "Solar system",
-        fontsize=16,
+        fontsize=SIZE_title,
         fontweight='bold')
   else:
     ax.set_title(
         str(
             system.n_bodies) +
         "-body system",
-        fontsize=16,
+        fontsize=SIZE_title,
         fontweight='bold')
 
   planets = [
@@ -146,7 +157,12 @@ def anim3d(system: body_system, step_size: float,
       for i in range(system.n_bodies)]  # alpha = transparency
   if com_bool:
     com = ax.plot([], [], [], 'x', label="Center of masses", color='red')[0]
-  time_text = ax.text2D(0.05, 0.95, '', transform=ax.transAxes)
+  time_text = ax.text2D(
+      0.05,
+      0.95,
+      '',
+      transform=ax.transAxes,
+      fontsize=SIZE_big)
 
   # add a legend
   # ax_legend = fig.add_subplot(111)
@@ -154,16 +170,17 @@ def anim3d(system: body_system, step_size: float,
   # fig.tight_layout()
 
   def animate(frame):
-    x_data = system.r[: (frame + 1), :, 0]
-    y_data = system.r[: (frame + 1), :, 1]
-    z_data = system.r[: (frame + 1), :, 2]
-    com_data = system.com[:(frame + 1)]
+    real_frame = frame * speed_up
+    x_data = system.r[: (real_frame + 1), :, 0]
+    y_data = system.r[: (real_frame + 1), :, 1]
+    z_data = system.r[: (real_frame + 1), :, 2]
+    com_data = system.com[:(real_frame + 1)]
 
     ax.view_init(elev=30, azim=-60 + frame / 10)
-    time_text.set_text(time_template % (frame * step_size * t0))
+    time_text.set_text(time_template % (real_frame * step_size * t0_years))
     for j in range(system.n_bodies):
-      planets[j].set_data(x_data[frame, j], y_data[frame, j])
-      planets[j].set_3d_properties(z_data[frame, j])
+      planets[j].set_data(x_data[real_frame, j], y_data[real_frame, j])
+      planets[j].set_3d_properties(z_data[real_frame, j])
       if trace_bool:
         traces[j].set_data(x_data[:, j], y_data[:, j])
         traces[j].set_3d_properties(z_data[:, j])
@@ -174,31 +191,32 @@ def anim3d(system: body_system, step_size: float,
     return planets + traces + [time_text] + [ax]
 
   anim = animation.FuncAnimation(
-      fig, animate, frames=FRAMES, interval=interval, blit=True)
+      fig, animate, frames=FRAMES // speed_up, interval=interval, blit=True)
 
   return anim
 
 
-def get_anim(system: body_system, step_size: float, filename: str) -> None:
-  print("Print traces of the bodies (y/n):")
+def get_anim(system: body_system, step_size: float,
+             speed_up: int, filename: str) -> None:
+  print("Print traces of the bodies: (y/n, default: y) ")
   try:
     trace = input()
   except KeyboardInterrupt:
     sys.exit(0)
-  if trace not in ['y', 'n']:
+  if trace not in ['y', 'n', '']:
     print("The data entered is not correct.\nExiting.")
     sys.exit(0)
-  elif trace == 'y':
+  elif trace == 'y' or trace == '':
     trace = True
   else:
     trace = False
 
-  print("Print the center of masses (y/n):")
+  print("Print the center of masses: (y/n, default: n) ")
   try:
     com = input()
   except KeyboardInterrupt:
     sys.exit(0)
-  if com not in ['y', 'n']:
+  if com not in ['y', 'n', '']:
     print("The data entered is not correct.\nExiting.")
     sys.exit(0)
   elif com == 'y':
@@ -214,12 +232,12 @@ def get_anim(system: body_system, step_size: float, filename: str) -> None:
   if system.dim == 2:
     interval = 10
   else:
-    interval = 1
+    interval = 10
 
   if system.dim == 2:
-    anim = anim2d(system, step_size, trace, com, FRAMES, interval)
+    anim = anim2d(system, step_size, trace, com, FRAMES, interval, speed_up)
   else:
-    anim = anim3d(system, step_size, trace, com, FRAMES, interval)
+    anim = anim3d(system, step_size, trace, com, FRAMES, interval, speed_up)
 
   plt.show()
   FPS = 60

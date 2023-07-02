@@ -76,7 +76,7 @@ class body_system:  # particle class
 
   def integrate_system(self: 'body_system', lib_filename: str,
                        num_steps: int, step_size: float, num_steps_max_flow: int,
-                       TOL_rk78: float, EPS_field: float) -> None:
+                       TOL_rk78: float, TOL_coll: float, EPS_field: float) -> None:
     # preparing income and outcome types of variables
     fun = ctypes.CDLL(lib_filename)
 
@@ -87,7 +87,8 @@ class body_system:  # particle class
         ctypes.c_double,  # h
         ctypes.c_double,  # hmin
         ctypes.c_double,  # hmax
-        ctypes.c_double,  # tol
+        ctypes.c_double,  # tol_rk78
+        ctypes.c_double,  # tol_coll
         ctypes.c_int,  # maxNumStepsFlow
         ctypes.c_int,  # n_bodies
         ctypes.c_int,  # dim
@@ -117,7 +118,7 @@ class body_system:  # particle class
     step_size_max = step_size * 100
     G = 1.
     r = fun.integration(num_steps, aux_r0, aux_mass, step_size, step_size_min,
-                        step_size_max, TOL_rk78, num_steps_max_flow, self.n_bodies,
+                        step_size_max, TOL_rk78, TOL_coll, num_steps_max_flow, self.n_bodies,
                         self.dim, G, EPS_field)
     com = fun.com(self.dim, num_steps, self.n_bodies, r, aux_mass)
 
@@ -125,9 +126,10 @@ class body_system:  # particle class
     # reshape r in num_steps+1 blocks of n_bodies x dim
     self.r = np.ctypeslib.as_array(
         r, shape=(num_steps + 1, self.n_bodies, self.dim))
-    # with open("data/positions_body1.txt", "w") as f:
-    #   for i in range(num_steps + 1):
-    #     f.write(str(self.r[i, 0, 0]) + " " + str(self.r[i, 0, 1]) + "\n")
+    # for j in range(self.n_bodies):
+    #   with open("data/positions_body" + str(j) + ".txt", "w") as f:
+    #     for i in range(num_steps + 1):
+    #       f.write(str(self.r[i, j, 0]) + " " + str(self.r[i, j, 1]) + "\n")
     self.com = np.ctypeslib.as_array(com, shape=(num_steps + 1, self.dim))
 
   def init_com(self, r) -> np.ndarray:

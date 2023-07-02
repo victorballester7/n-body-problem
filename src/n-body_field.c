@@ -8,20 +8,21 @@
 #include "../include/misc.h"
 #include "../include/rk78.h"
 
-double *integration(int numSteps, double x[], double m[], double h, double hmin, double hmax, double tol, int maxNumStepsFlow, int n_bodies, int dim, double G, double EPS) {
-  double *result = malloc(sizeof(double) * numSteps * dim * n_bodies);
+double *integration(int numSteps, double x[], double m[], double h, double hmin, double hmax, double tol_rk78, double tol_coll, int maxNumStepsFlow, int n_bodies, int dim, double G, double EPS) {
+  double *result = malloc(sizeof(double) * (numSteps + 1) * dim * n_bodies);
   double t = 0;
   double T = h;
   int n = 2 * n_bodies * dim;
-  n_body_params param = {dim, malloc(sizeof(double) * n_bodies), G, EPS};
+  n_body_params param = {dim, malloc(sizeof(double) * n_bodies), G, tol_coll, EPS};
   memcpy(param.m, m, sizeof(double) * n_bodies);  // masses
   for (int i = 0; i < n_bodies; i++)
     memcpy(result + i * dim, x + i * dim * 2, sizeof(double) * dim);
   // printf("Hola:\n");
   // for (int i = 0; i < n_bodies; i++)
   //   write_vector(result + i * dim, dim);
-  for (int j = 1; j < numSteps; j++) {
-    if (flow(&t, x, &h, T, hmin, hmax, tol, maxNumStepsFlow, n, n_body_field, &param)) {
+  for (int j = 1; j < numSteps + 1; j++) {
+    // if (rk78(&t, x, &h, hmin, hmax, tol_rk78, n, n_body_field, &param)) {
+    if (flow(&t, x, &h, T, hmin, hmax, tol_rk78, maxNumStepsFlow, n, n_body_field, &param)) {
       printf("Error in integration\n");
       exit(1);
     }
@@ -47,7 +48,7 @@ int n_body_field(int n, double t, double x[], double f[], void *param) {
       for (int k = 0; k < n_bodies; k++) {
         if (k == i) continue;
         // if distance(i, k) < EPS, then the force is not computed because the two particles are too close (they have collided)
-        if (dist(x + i * N, x + k * N, prm->dim) < prm->EPS) {
+        if (dist(x + i * N, x + k * N, prm->dim) < prm->TOL_COLL) {
           mass_collision += prm->m[k];
           v_j += x[k * N + prm->dim + j] * prm->m[k];
           continue;
