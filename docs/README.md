@@ -41,7 +41,7 @@ We present here some animations of the project in 2D and 3D.
 
 #### 2D
 
-![Solar system](../animation/solar_system2d.mp4)
+![Solar system](../.github/images/solar_system2d.mp4)
 
 <div style="display: flex;" align="center">
   <div style="flex: 45%; padding: 5px;">
