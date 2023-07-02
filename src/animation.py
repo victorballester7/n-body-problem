@@ -16,8 +16,8 @@ def anim2d(system: body_system, step_size: float,
 
   time_template = 'time = %.2f days'
   lim = 3
-  if "solar_system" in system.sys_name and system.n_bodies == 9:
-    lim = 35
+  if "solar_system" in system.name and system.n_bodies >= 9:
+    lim = 40
   ax = fig.add_subplot()
   ax.axis('equal')
   ax.set(xlim=(-lim, lim), ylim=(-lim, lim))
@@ -27,12 +27,18 @@ def anim2d(system: body_system, step_size: float,
   ax.set_xlabel('x (AU)', fontsize=14)
   ax.set_ylabel('y (AU)', fontsize=14)
 
-  ax.set_title(
-      str(
-          system.n_bodies) +
-      "-body system",
-      fontsize=16,
-      fontweight='bold')
+  if "solar_system" in system.name:
+    ax.set_title(
+        "Solar system",
+        fontsize=16,
+        fontweight='bold')
+  else:
+    ax.set_title(
+        str(
+            system.n_bodies) +
+        "-body system",
+        fontsize=16,
+        fontweight='bold')
 
   planets = [
       ax.plot([], [], 'o', lw=2, ms=system.vol[i], color=system.colors[i], label=system.bodies_names[i] + ": " + str(round(system.mass[i], 2)) + " M_earth")[0] for i in range(system.n_bodies)]
@@ -83,8 +89,8 @@ def anim3d(system: body_system, step_size: float,
 
   time_template = 'time = %.2f days'
   lim = 2
-  if "solar_system" in system.sys_name and system.n_bodies == 9:
-    lim = 35
+  if "solar_system" in system.name and system.n_bodies >= 9:
+    lim = 40
   ax = fig.add_subplot(projection='3d')
   ax.set(xlim=(-lim, lim), ylim=(-lim, lim), zlim=(-lim, lim))
   # changes the size of the ticks
@@ -93,17 +99,28 @@ def anim3d(system: body_system, step_size: float,
   ax.set_ylabel('y', fontsize=14)
   ax.set_zlabel('z', fontsize=14)
 
+  # Remove the grid
+  ax.grid(False)
+
   # change background color surface axis
   ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.05))
   ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.05))
   ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.05))
 
-  ax.set_title(
-      str(
-          system.n_bodies) +
-      "-body system",
-      fontsize=16,
-      fontweight='bold')
+  fig.tight_layout()
+
+  if "solar_system" in system.name:
+    ax.set_title(
+        "Solar system",
+        fontsize=16,
+        fontweight='bold')
+  else:
+    ax.set_title(
+        str(
+            system.n_bodies) +
+        "-body system",
+        fontsize=16,
+        fontweight='bold')
 
   planets = [
       ax.plot(
@@ -135,8 +152,6 @@ def anim3d(system: body_system, step_size: float,
   # ax_legend = fig.add_subplot(111)
   # ax_legend.legend(*ax.get_legend_handles_labels(), loc='center')
   # fig.tight_layout()
-
-  print(system.r)
 
   def animate(frame):
     x_data = system.r[: (frame + 1), :, 0]
@@ -190,8 +205,6 @@ def get_anim(system: body_system, step_size: float, filename: str) -> None:
     com = True
   else:
     com = False
-
-  system.colors = np.random.uniform(0.25, 1, size=(system.n_bodies, 3))
 
   # Set-up
   # mpl.rcParams['text.usetex'] = True

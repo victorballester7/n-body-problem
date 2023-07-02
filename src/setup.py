@@ -71,7 +71,6 @@ def get_bodies(filename: str) -> body_system:
       print("The data entered is not correct.\nExiting.")
       sys.exit(0)
     data = df.loc[df["system_name"] == syst_names[k]]
-   # print(data)
     n = len(data)
 
     bodies_names = np.array(data["body_name"])

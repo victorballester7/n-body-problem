@@ -26,12 +26,13 @@ class body_system:  # particle class
                       0.3829,  # mercury
                       0.9499,  # venus
                       1,  # earth
+                      # 0.107,  # moon
                       0.5320,  # mars
                       10.97,  # jupiter
                       9.14,  # saturn
                       3.981,  # uranus
                       3.865])  # neptune
-      if self.n_bodies == 9:
+      if self.n_bodies >= 9:
         vol[0] = 0.3829
       self.vol = a * vol + b
     else:
@@ -56,6 +57,8 @@ class body_system:  # particle class
           self.colors[i] = np.array([0.5, 0.5, 0])
         elif planet == "earth":
           self.colors[i] = np.array([0, 0, 1])
+        elif planet == "moon":
+          self.colors[i] = np.array([0.8, 0.8, 0.8])
         elif planet == "mars":
           self.colors[i] = np.array([1, 0, 0])
         elif planet == "jupiter":

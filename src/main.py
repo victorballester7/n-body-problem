@@ -7,7 +7,7 @@ from parameters import *
 # np.set_printoptions(threshold=sys.maxsize)
 
 
-def main(num_steps: int, step_size: float, num_steps_max_flow: int,
+def main(num_steps_max_flow: int,
          TOL_rk78: float, EPS_field: float) -> None:
   script_dir = os.path.dirname(os.path.abspath(__file__))
   filename_inp = script_dir + "/../data/data.csv"
@@ -15,6 +15,14 @@ def main(num_steps: int, step_size: float, num_steps_max_flow: int,
 
   # get the system
   system = get_bodies(filename_inp)
+
+  if "solar_system_2d_rocky" in system.name:
+    num_steps, step_size = param(
+        days_solar_syst_rock, speed_up_solar_syst_rock)
+  elif "solar_system_2d" in system.name:
+    num_steps, step_size = param(days_solar_syst, speed_up_solar_syst)
+  else:
+    num_steps, step_size = param(days, speed_up)
 
   # integration of the system
   system.integrate_system(
@@ -29,4 +37,4 @@ def main(num_steps: int, step_size: float, num_steps_max_flow: int,
   get_anim(system, step_size, filename_inp)
 
 
-main(num_steps, step_size, num_steps_max_flow, TOL_rk78, EPS_field)
+main(num_steps_max_flow, TOL_rk78, EPS_field)

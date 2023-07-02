@@ -37,15 +37,44 @@ int n_body_field(int n, double t, double x[], double f[], void *param) {
   // positions
   int N = 2 * prm->dim;
   int n_bodies = n / N;
+  double mass_collision;  // mass of all the bodies that have collided with the current body
+  double v_j;             // component j of the COM velocity of the bodies that have collided with the current body
   for (int i = 0; i < n_bodies; i++) {
+    mass_collision = prm->m[i];
     for (int j = 0; j < prm->dim; j++) {
-      f[i * N + j] = x[i * N + prm->dim + j];  // position
-      // velocity
-      f[i * N + prm->dim + j] = 0;
-      for (int k = 0; k < n_bodies && k != i; k++) {
+      v_j = x[i * N + prm->dim + j] * prm->m[i];  // contribution of the velocity of the current body (think in the velocity of the COM)
+      f[i * N + prm->dim + j] = 0;                // velocity
+      for (int k = 0; k < n_bodies; k++) {
+        if (k == i) continue;
+        // if distance(i, k) < EPS, then the force is not computed because the two particles are too close (they have collided)
+        if (dist(x + i * N, x + k * N, prm->dim) < prm->EPS) {
+          mass_collision += prm->m[k];
+          v_j += x[k * N + prm->dim + j] * prm->m[k];
+          continue;
+        }
         f[i * N + prm->dim + j] += -prm->G * prm->m[k] * (x[i * N + j] - x[k * N + j]) / (pow(dist(x + i * N, x + k * N, prm->dim), 3) + prm->EPS);  // velocity
+        // printf("hola\n");
+        // if (i == 0)
+        //   printf("k = %d, f[%d] = %lf\n", k, i * N + prm->dim + j, f[i * N + prm->dim + j]);
       }
+      f[i * N + j] = v_j / mass_collision;  // position
     }
   }
+
+  // for (int i = 0; i < n_bodies; i++) {
+  //   for (int j = 0; j < prm->dim; j++) {
+  //     f[i * N + j] = x[i * N + prm->dim + j];  // position
+  //     // velocity
+  //     f[i * N + prm->dim + j] = 0;
+  //     for (int k = 0; k < n_bodies; k++) {
+  //       if (k == i) continue;
+  //       // if distance(i, k) < EPS, then the force is not computed because the two particles are too close (they have collided)
+  //       f[i * N + prm->dim + j] += -prm->G * prm->m[k] * (x[i * N + j] - x[k * N + j]) / (pow(dist(x + i * N, x + k * N, prm->dim), 3) + prm->EPS);  // velocity
+  //       // printf("hola\n");
+  //       // if (i == 0)
+  //       //   printf("k = %d, f[%d] = %lf\n", k, i * N + prm->dim + j, f[i * N + prm->dim + j]);
+  //     }
+  //   }
+  // }
   return 0;
 }
