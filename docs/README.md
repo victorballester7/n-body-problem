@@ -41,7 +41,7 @@ We present here some animations of the project in 2D and 3D.
 
 #### 2D
 
-![Solar system](../.github/images/solar_system2d.mp4)
+https://raw.githubusercontent.com/victorballester7/n-body_problem/main/.github/images/random10-2d.mp4
 
 <div style="display: flex;" align="center">
   <div style="flex: 45%; padding: 5px;">
