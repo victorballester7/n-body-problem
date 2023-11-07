@@ -6,10 +6,12 @@ c_double_p = ctypes.POINTER(ctypes.c_double)
 
 class body_system:  # particle class
 
-  def __init__(self: 'body_system', name: str, dim: int, n_bodies: int,
+  def __init__(self: 'body_system', name: str, dim: int, days_to_simulate: int, speed_up: int, n_bodies: int,
                bodies_names: np.ndarray, mass: np.ndarray, r0: np.ndarray) -> None:
     self.name = name
     self.dim = dim
+    self.days_to_simulate = days_to_simulate
+    self.speed_up = speed_up  # speed up the animation by this factor
     self.n_bodies = n_bodies  # number of planets
     self.bodies_names = bodies_names
     self.mass = mass

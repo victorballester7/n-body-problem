@@ -2,56 +2,84 @@ import numpy as np
 import pandas as pd
 from bodies import body_system
 import sys
+from parameters import *
 
 
 def get_dim() -> int:
   print("Dimension of the system (2 or 3, default: 2):")
-  try:
-    dim = input()
-  except KeyboardInterrupt:
-    sys.exit(0)
-  if dim == '':
-    dim = 2
-  else:
+  while True:
     try:
-      dim = int(dim)
-    except ValueError:
-      print("The dimension is not correct.\nExiting.")
+      dim = input()
+    except KeyboardInterrupt:
       sys.exit(0)
-  if dim not in [2, 3]:
-    print("The dimension is not correct.\nExiting.")
-    sys.exit(0)
+    if dim == '':
+      dim = 2
+    else:
+      try:
+        dim = int(dim)
+      except ValueError:
+        print("The dimension is not correct. Enter it again.")
+        continue
+    if dim not in [2, 3]:
+      print("The dimension is not correct. Enter it again.")
+    else:
+      break
   return dim
 
 
 def get_bodies(filename: str) -> body_system:
   print("Random or Predefined systems for the initial states of the bodies: (r/p, default: r)")
-  try:
-    p = input()
-  except KeyboardInterrupt:
-    sys.exit(0)
-  if p not in ['r', 'p', '']:
-    print("The data entered is not correct.\nExiting.")
-    sys.exit(0)
+  while True:
+    try:
+      p = input()
+    except KeyboardInterrupt:
+      sys.exit(0)
+    if p not in ['r', 'p', '']:
+      print("The data entered is not correct. Enter it again.")
+    else:
+      break
 
   dim = get_dim()
   if p == 'r' or p == '':
     print("Number of bodies: (default: 5)")
-    try:
-      n = input()
-    except KeyboardInterrupt:
-      sys.exit(0)
-    if n == '':
-      n = 5
-    else:
+    while True:
       try:
-        n = int(n)
-      except ValueError:
-        print("The number of bodies is not correct.\nExiting.")
+        n = input()
+      except KeyboardInterrupt:
         sys.exit(0)
-    if n <= 1:
-      print("The number of bodies does not make sense.\nExiting.")
-      sys.exit(0)
+      if n == '':
+        n = 5
+      else:
+        try:
+          n = int(n)
+        except ValueError:
+          print("The number of bodies is not correct. Enter it again.")
+          continue
+      if n <= 1:
+        print("The number of bodies does not make sense. Enter it again.")
+      else:
+        break
+
+    print("Number of years to simulate: (default: 280)")
+    while True:
+      try:
+        years = input()
+      except KeyboardInterrupt:
+        sys.exit(0)
+      if years == '':
+        years = 280
+      else:
+        try:
+          years = int(years)
+        except ValueError:
+          print("The number of years is not correct. Enter it again.")
+          continue
+      if years <= 0:
+        print("The number of years does not make sense. Enter it again.")
+      else:
+        break
+    days = 365 * years  # number of days to simulate (real days)
+
     mass = np.random.uniform(1, 10, size=n)  # vector of masses
     r0 = np.zeros((n, 2 * dim))
 
@@ -65,7 +93,15 @@ def get_bodies(filename: str) -> body_system:
                                      max_pos, size=(n, dim))  # positions
     r0[:, dim:] = np.random.uniform(-max_vel,
                                     max_vel, size=(n, dim))  # velocities
-    system = body_system("Random System", dim, n, names, mass, r0)
+    system = body_system(
+        "Random System",
+        dim,
+        days,
+        speed_up_default,
+        n,
+        names,
+        mass,
+        r0)
   else:
     df = pd.read_csv(filename, sep=' ', header=0)
 
@@ -103,5 +139,23 @@ def get_bodies(filename: str) -> body_system:
     if dim == 2:
       r0[:, 0:] = np.array(data[["x", "y", "vx", "vy"]])
 
-    system = body_system(syst_names[k], dim, n, bodies_names, mass, r0)
+    if "solar_system_2d_rocky" in syst_names[k]:
+      speed_up = speed_up_solar_syst_rock
+      days = days_solar_syst_rock
+    elif "solar_system_2d" in syst_names[k]:
+      speed_up = speed_up_solar_syst
+      days = days_solar_syst
+    else:
+      speed_up = speed_up_default
+      days = days_default
+
+    system = body_system(
+        syst_names[k],
+        dim,
+        days,
+        speed_up,
+        n,
+        bodies_names,
+        mass,
+        r0)
   return system

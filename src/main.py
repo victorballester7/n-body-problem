@@ -16,19 +16,13 @@ def main(num_steps_max_flow: int,
 
   # get the system
   system = get_bodies(filename_inp)
-  if "solar_system_2d_rocky" in system.name:
-    num_steps, step_size = param(days_solar_syst_rock, 2)
-    speed_up = int(
-        num_steps *
-        1. /
-        FRAMES_TO_ANIMATE *
-        speed_up_solar_syst_rock)
-  elif "solar_system_2d" in system.name:
-    num_steps, step_size = param(days_solar_syst, 2)
-    speed_up = int(num_steps * 1. / FRAMES_TO_ANIMATE * speed_up_solar_syst)
+  # or "solar_system_2d_rocky" in system.name. It is not necessary.
+  if "solar_system_2d" in system.name:
+    num_steps, step_size = param(system.days_to_simulate, 2.)
   else:
-    num_steps, step_size = param(days, 0.5)
-    speed_up = int(num_steps * 1. / FRAMES_TO_ANIMATE * speed_up_default)
+    num_steps, step_size = param(system.days_to_simulate, 0.5)
+
+  speed_up = int(num_steps * 1. / FRAMES_TO_ANIMATE * system.speed_up)
 
   # count time
   start = time.time()

@@ -20,7 +20,9 @@ speed_up_solar_syst_rock = 1  # speed up the animation by this factor
 
 
 #### DEFAULT FOR RANDOM SYSTEMS ####
-days = 100000  # number of days to simulate (real days)
+# number of years to simulate (real years). 1 year = 365 days
+years_default = 280
+days_default = 365 * years_default  # number of days to simulate (real days)
 # number of steps to simulate (the more steps, the smoother the animation)
 speed_up_default = 1  # speed up the animation by this factor
 
