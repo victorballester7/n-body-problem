@@ -41,6 +41,27 @@ def get_bodies(filename: str) -> body_system:
         else:
             break
 
+    def get_years(default_years: float) -> float:
+        print("Number of years to simulate: (default: " + str(default_years) + ")")
+        while True:
+            try:
+                years = input()
+            except KeyboardInterrupt:
+                sys.exit(0)
+            if years == '':
+                years = default_years
+            else:
+                try:
+                    years = float(years)
+                except ValueError:
+                    print("The number of years is not correct. Enter it again.")
+                    continue
+            if years <= 0:
+                print("The number of years does not make sense. Enter it again.")
+            else:
+                break
+        return years
+
     dim = get_dim()
     if p == 'r':
         print("Number of bodies: (default: " + str(DEFAULT_num_bodies) + ")")
@@ -62,25 +83,8 @@ def get_bodies(filename: str) -> body_system:
             else:
                 break
 
-        print("Number of years to simulate: (default: " + str(DEFAULT_years) + ")")
-        while True:
-            try:
-                years = input()
-            except KeyboardInterrupt:
-                sys.exit(0)
-            if years == '':
-                years = DEFAULT_years
-            else:
-                try:
-                    years = int(years)
-                except ValueError:
-                    print("The number of years is not correct. Enter it again.")
-                    continue
-            if years <= 0:
-                print("The number of years does not make sense. Enter it again.")
-            else:
-                break
-        days = 365 * years  # number of days to simulate (real days)
+        years = get_years(DEFAULT_years)
+        days = int(365 * years)  # number of days to simulate (real days)
 
         mass = np.random.uniform(1, 10, size=n)  # vector of masses
         r0 = np.zeros((n, 2 * dim))
@@ -160,26 +164,8 @@ def get_bodies(filename: str) -> body_system:
             else:
                 return DEFAULT_years
 
-        print("Number of years to simulate: (default: " +
-              str(get_default_days(syst_names[k])) + ")")
-        while True:
-            try:
-                years = input()
-            except KeyboardInterrupt:
-                sys.exit(0)
-            if years == '':
-                years = get_default_days(syst_names[k])
-            else:
-                try:
-                    years = int(years)
-                except ValueError:
-                    print("The number of years is not correct. Enter it again.")
-                    continue
-            if years <= 0:
-                print("The number of years does not make sense. Enter it again.")
-            else:
-                break
-        days = 365 * years
+        years = get_years(get_default_days(syst_names[k]))
+        days = int(365 * years)
 
         system = body_system(
             syst_names[k],
